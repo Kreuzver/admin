@@ -39,14 +39,12 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 		echo "Form belum lengkap!!!";		
 	}else{
 		//simpan data
-		$simpan = mysqli_query($konek, "INSERT INTO admin(idadmin,username,password,namalengkap)
-						VALUES ('$idadmin','$username','$password','$namalengkap');
+		 $simpan = mysqli_query( "insert into admin(idadmin,username,password,namalengkap)
+      values ('$idadmin','$username','$password','$namalengkap');
 		
-		if(!$simpan){
-			echo "Simpan data gagal!!!";
-		}else{
+		
 			header('location:tampil_admin.php');
-		}
+	     }
 	}
 }
 ?>
