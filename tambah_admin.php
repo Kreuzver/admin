@@ -1,51 +1,112 @@
-<?php include "header.php"; ?>
-
-<h3>Tambah Data Admin</h3>
-<form method="post" action="">
-	<table>
-		<tr>
-			<td>Idadmin</td>
-			<td><input type="number" name="idadmin" /></td>
-		</tr>
-		<tr>
-			<td>Username</td>
-			<td><input type="text" name="username" /></td>
-		</tr>
-		<tr>
-			<td>Password</td>
-			<td><input type="text" name="password" /></td>
-		</tr>
-		<tr>
-			<td>NamaLengkap</td>
-			<td><input type="text" name="namalengkap" /></td>
-		</tr>
-		<tr>
-			<td></td>
-			<td><input type="submit" value="Simpan" /></td>
-		</tr>
-		
-	</table>
-</form>
-
 <?php
-if($_SERVER['REQUEST_METHOD']=='POST'){
-	$idadmin = $_POST['idadmin'];
-	$username = $_POST['username'];
-	$password = $_POST['password'];
-	$namalengkap = $_POST['namalengkap'];
-	
-	
-	if($idadmin=='' || $username=='' || $password=='' || $namalengkap=''){
-		echo "Form belum lengkap!!!";		
-	}else{
-		//simpan data
-		 $simpan = mysqli_query($konek, "insert into admin(idadmin,username,password,namalengkap)
-                                    values ('$idadmin','$username','$password','$namalengkap')");
-		
-		
-			header('location:tampil_admin.php');
-	     }
-	}
-}
+
+require_once("config2.php");
+
+if(isset($_POST['Register'])){
+
+    
+    // filter data yang diinputkan
+    $idadmin = filter_input(INPUT_POST, 'idadmin', FILTER_SANITIZE_STRING);
+    $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
+    // enkripsi password
+    $password = md5($_POST["password"]);
+    $namalengkap = filter_input(INPUT_POST, 'namalengkap', FILTER_VALIDATE_EMAIL);
+
+    $stmt = $db->prepare("SELECT `username` FROM `admin` WHERE `username` LIKE :username LIMIT 1;");
+    $stmt->execute([":username" => $username]);
+
+    // bind parameter ke query
+    $params = array(
+        "idadmin" => $idadmin,
+        ":username" => $username,
+        ":password" => $password,
+        ":namalengkap" => $namalengkap,
+    );
+
+    // eksekusi query untuk menyimpan ke database
+    $saved = $stmt->execute($params);
+
+    // jika query simpan berhasil, maka user sudah terdaftar
+    // maka alihkan ke halaman index
+    if($saved) header("Location: index.php");
+
 ?>
-<?php include "footer.php"; ?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Colorlib Templates">
+    <meta name="author" content="Colorlib">
+    <meta name="keywords" content="Colorlib Templates">
+
+    <!-- Title Page-->
+    <title>admin register</title>
+
+    <!-- Icons font CSS-->
+    <link href="vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
+    <link href="vendor/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" media="all">
+    <!-- Font special for pages-->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+    <!-- Vendor CSS-->
+    <link href="vendor/select2/select2.min.css" rel="stylesheet" media="all">
+    <link href="vendor/datepicker/daterangepicker.css" rel="stylesheet" media="all">
+
+    <!-- Main CSS-->
+    <link href="css/main.css" rel="stylesheet" media="all">
+</head>
+
+
+<body>
+    <div class="page-wrapper bg-gra-01 p-t-180 p-b-100 font-poppins">
+        <div class="wrapper wrapper--w780">
+            <div class="card card-3">
+                <div class="card-heading"></div>
+                <div class="card-body">
+                    <h2 class="title">Admin Register</h2>
+                    <form method="POST">
+            <div class="input-group">
+                <label for="idadmin">ID Admin</label>
+                <input class="input--style-3" type="text" name="cnama" placeholder="Nama" />
+            </div>
+
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input class="input--style-3" type="text" name="cuser" placeholder="Username" />
+            </div>
+
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input class="input--style-3" type="password" name="cemail" placeholder="Password" />  
+            </div>
+
+            <div class="input-group">
+                <label for="namalengkap">nama lengkap</label>
+                <input class="input--style-3" type="text" name="cpass" placeholder="Nama Lengkap" />
+            </div>
+
+			<input type="submit" class="btn btn--pill btn--green" name="Register" value="Daftar" />
+                    </form>
+					
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Jquery JS-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <!-- Vendor JS-->
+    <script src="vendor/select2/select2.min.js"></script>
+    <script src="vendor/datepicker/moment.min.js"></script>
+    <script src="vendor/datepicker/daterangepicker.js"></script>
+
+    <!-- Main JS-->
+    <script src="js/global.js"></script>
+
+</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+
+</html>
