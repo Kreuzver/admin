@@ -39,8 +39,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 		echo "Form belum lengkap!!!";		
 	}else{
 		//simpan data
-		 $simpan = mysqli_query( "insert into admin(idadmin,username,password,namalengkap)
-      values ('$idadmin','$username','$password','$namalengkap');
+		 $simpan = mysqli_query($konek, "insert into admin(idadmin,username,password,namalengkap)
+                                    values ('$idadmin','$username','$password','$namalengkap')");
 		
 		
 			header('location:tampil_admin.php');
@@ -48,5 +48,4 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	}
 }
 ?>
-
 <?php include "footer.php"; ?>
