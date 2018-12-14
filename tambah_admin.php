@@ -40,7 +40,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	}else{
 		//simpan data
 		$simpan = mysqli_query($konek, "INSERT INTO admin(idadmin,username,password,namalengkap)
-						VALUES ('$idadmin','$username','$password','$namalengkap')");
+						VALUES ('$idadmin','$username','$password','$namalengkap');
 		
 		if(!$simpan){
 			echo "Simpan data gagal!!!";
